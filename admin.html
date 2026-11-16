@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>TECH@IIMB 2027 · Content admin</title>
+<style>@font-face{font-family:"Anek Latin";src:url(assets/fonts/anek-latin-latin-100-800.woff2) format("woff2");font-weight:100 800;font-stretch:75% 125%}</style>
+<style>
+:root{--bg:#1C1A17;--side:#262320;--panel:#262320;--line:rgba(238,234,226,.13);--line2:rgba(238,234,226,.24);--ink:#EEEAE2;--muted:#B9B1A4;--dim:#8f877b;--cyan:#EC6A61;--violet:#EC6A61;--warn:#F2A900;--bad:#ff8a7a;--grad:#B12322}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 'Anek Latin',system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+h1,h2,h3{font-family:'Anek Latin',system-ui,sans-serif;font-stretch:80%;font-weight:650;margin:0}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.gate{min-height:100vh;display:grid;place-items:center;padding:20px}
+.gate-card{width:min(460px,100%);padding:36px;border-radius:0;background:var(--panel);border:1px solid var(--line)}
+.gate-card h1{font-size:1.6rem;margin-top:16px}.gate-card p{color:var(--muted);margin:10px 0 0}
+.mark{width:44px;height:44px;border-radius:0;background:var(--grad);display:grid;place-items:center;color:#04101f;font:700 .8rem 'Anek Latin'}
+.warn{margin-top:18px;padding:14px 16px;border-radius:0;background:rgba(255,207,122,.08);border:1px solid rgba(255,207,122,.3);color:#ffe3ad;font-size:.85rem}
+.app{display:none;grid-template-columns:240px 1fr;min-height:100vh}.app.on{display:grid}
+aside{background:var(--side);border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+aside .brand{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}aside .brand b{font:700 1rem 'Anek Latin'}aside .brand small{display:block;color:var(--dim);font:500 .65rem 'Anek Latin';letter-spacing:.12em}
+.tab{text-align:left;padding:10px 12px;border-radius:0;border:0;background:none;color:var(--muted);display:flex;justify-content:space-between}
+.tab:hover{color:var(--ink);background:rgba(255,255,255,.04)}.tab[aria-current="page"]{background:rgba(43,212,228,.1);color:var(--ink)}
+.tab .n{font:500 .7rem 'Anek Latin';color:var(--cyan)}
+aside .foot{margin-top:auto;font-size:.75rem;color:var(--dim);padding:8px}
+main{padding:28px 36px 80px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.top h2{font-size:1.6rem}.top p{color:var(--muted);margin:4px 0 0}
+.status{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{font:500 .7rem 'Anek Latin';padding:5px 10px;border-radius:999px;border:1px solid var(--line2);color:var(--muted)}
+.pill.dirty{color:var(--warn);border-color:rgba(255,207,122,.4)}.pill.ok{color:var(--cyan);border-color:rgba(43,212,228,.4)}
+.btn{padding:9px 14px;border-radius:0;border:1px solid var(--line2);background:transparent;font-weight:600;font-size:.84rem}
+.btn:hover{border-color:var(--cyan)}.btn.pri{background:#B12322;color:#fff;border:0}.btn.pri:hover{background:#94191A}.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:22px;margin-bottom:14px}
+.card h3{font-size:1.05rem;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.f{display:flex;flex-direction:column;gap:5px}.f.full{grid-column:1/-1}
+.f label{font:500 .68rem 'Anek Latin';letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.f input,.f select,.f textarea{padding:10px 12px;border-radius:0;border:1px solid var(--line2);background:rgba(255,255,255,.03)}
+.f select option{background:var(--panel)}
+.f textarea{min-height:80px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--cyan)}
+.f.err input,.f.err textarea{border-color:var(--bad)}.f .e{color:var(--bad);font-size:.75rem;min-height:0}
+.f .h{color:var(--dim);font-size:.74rem}
+.item{border:1px solid var(--line);border-radius:0;margin-bottom:10px;background:rgba(255,255,255,.015)}
+.item summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.item summary::-webkit-details-marker{display:none}
+.item summary b{font-weight:600}.item summary small{color:var(--dim);font:500 .72rem 'Anek Latin'}
+.item .body{padding:4px 16px 16px}
+.row-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.stat{padding:18px;border-radius:0;background:var(--panel);border:1px solid var(--line)}.stat b{display:block;font:650 1.9rem 'Anek Latin'}.stat span{color:var(--muted);font-size:.82rem}
+.check{list-style:none;padding:0;margin:0}.check li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border:0}.check i{font-style:normal;width:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{font:500 .68rem 'Anek Latin';letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line2);border-radius:0}
+textarea.code{width:100%;min-height:260px;font:500 .78rem 'Anek Latin';padding:12px;border-radius:0;border:1px solid var(--line2);background:#050b17}
+.thumb{width:72px;height:90px;border-radius:8px;object-fit:cover;border:1px solid var(--line2)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#0b1830;padding:10px 16px;border-radius:0;font-weight:600;transition:.3s;pointer-events:none;z-index:9}.toast.show{opacity:1;transform:translate(-50%,0)}
+.seg{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.seg button{padding:7px 12px;border-radius:999px;border:1px solid var(--line2);background:none}.seg button[aria-pressed="true"]{background:var(--ink);color:#0b1830}
+.dlg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;place-items:center;z-index:8}.dlg.on{display:grid}.dlg .card{width:min(420px,92vw)}
+@media(max-width:820px){.app.on{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap}aside .brand,aside .foot{display:none}main{padding:20px}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="mark">T@I</div>
+    <h1>Content admin</h1>
+    <p>Manage the programme, activities, speakers, announcements, FutureTech Challenge and event settings for TECH@IIMB 2027.</p>
+    <div class="warn"><strong>Preview mode — authentication is not configured.</strong> This dashboard runs entirely in your browser. Before going live, host it behind server-side authentication (for example institutional SSO) and connect a backend so edits reach every visitor.</div>
+    <button class="btn pri" style="margin-top:20px;width:100%" id="enter">Enter preview dashboard</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside aria-label="Admin sections">
+    <div class="brand"><div class="mark" style="width:34px;height:34px;font-size:.66rem">T@I</div><div><b>TECH@IIMB</b><small>ADMIN · 2027</small></div></div>
+    <nav id="tabs" style="display:contents"></nav>
+    <div class="foot">Drafts are stored in this browser only.<br><a href="index.html" style="color:var(--cyan)">Open public site ↗</a></div>
+  </aside>
+  <main>
+    <div class="top">
+      <div><h2 id="viewTitle">Overview</h2><p id="viewSub"></p></div>
+      <div class="status">
+        <span class="pill" id="dirtyPill">No unsaved changes</span>
+        <button class="btn" id="saveBtn">Save draft</button>
+        <button class="btn pri" id="pubBtn">Publish to preview</button>
+      </div>
+    </div>
+    <div id="view"></div>
+  </main>
+</div>
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT"><div class="card"><h3 id="dlgT">Confirm</h3><p id="dlgM" style="color:var(--muted)"></p><div class="row-actions" style="justify-content:flex-end"><button class="btn" id="dlgNo">Cancel</button><button class="btn pri" id="dlgYes">Confirm</button></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="js/content.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

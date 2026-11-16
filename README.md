@@ -1,46 +1,87 @@
-# TECH@IIMB 2027 — website
+TECH@IIMB 2027 — Official Website
+Website for TECH@IIMB 2027, the annual technology symposium of IIM Bangalore, convened by the Centre for Software and IT Management (CSITM).
 
-A static multi-page site with no build step. Upload the folder to any static host, such as GitHub Pages, Netlify or IIMB's own web server.
+It's a static site built with HTML, CSS and JavaScript: no framework, no database, no build step.
 
-## Version 3 — black & navy
-Pages: `index.html` · `about.html` · `discussions.html` · `exhibition.html` · `startup.html` · `pre-events.html` · `partner.html` · `contact.html`, plus `admin.html`, which is for the organisers and is not linked from the public pages.
+Requirements
+A modern web browser (Chrome, Edge, Safari or Firefox)
+Python 3, used only to preview the site on your computer and to regenerate pages. Download it from python.org.
+Run the website locally
+The site must be opened through a local server, not by double-clicking index.html. Fonts, links between pages and the contact form need a server to work.
 
-Deep links:
-- `discussions.html#day-2` opens a specific day.
-- `exhibition.html#activity-code-golf` opens a specific activity.
+1. Extract the ZIP file to a folder, for example tech-iimb-website.
 
-Downloads: `assets/docs/TECH-IIMB-2027-Booklet.pdf` and `assets/docs/TECH-IIMB-Concept-Note.pdf` (compressed).
+2. Open a terminal in that folder.
 
-Brand name: `tools/build3.py` has `BRAND_YEAR = "2027"`. Set it to `""` and rebuild to show "TECH@IIMB" without the year everywhere.
+Windows: open the folder in File Explorer, click the address bar, type cmd, and press Enter.
+macOS: right-click the folder in Finder and choose New Terminal at Folder.
+Linux: right-click inside the folder and choose Open in Terminal.
+3. Start the server:
 
-Motion:
-- page-to-page transitions (Chrome and Edge)
-- scroll reveals, image wipes and number counters
-- hover lifts and a themes ticker
+python -m http.server 8000
+On macOS or Linux, use python3 instead of python if the command isn't found.
 
-All of these switch off for visitors who prefer reduced motion.
+4. Open the site in your browser:
 
-## Content
-All event content lives in `js/content.js`. Fields left empty are simply not shown on the site. Some features switch on as soon as their fields are filled:
-- `settings.registrationUrl` adds Register buttons.
-- `futuretech.applyUrl` adds an Apply button.
-- `futuretech.themes` lists the challenge themes.
-- Speakers marked `published: true` appear with their portrait and biography.
+http://localhost:8000
+5. Stop the server by pressing Ctrl + C in the terminal.
 
-`admin.html` edits this content and can copy it out as a new `content.js`. Its "Publish to preview" button only changes what you see in your own browser. Before going live, put `admin.html` behind server-side login or remove it from the public deployment.
+The admin dashboard is at http://localhost:8000/admin.html.
 
+Project structure
+├── index.html            Home
+├── about.html            About
+├── discussions.html      Programme, formats, technology tracks, sectors, speakers
+├── exhibition.html       Exhibition and the 13 activities
+├── startup.html          FutureTech Challenge and startup programme
+├── pre-events.html       Pre-event timeline and news
+├── partner.html          Partnerships and partnership enquiry form
+├── contact.html          Contact form, FAQs and venue
+├── admin.html            Content dashboard for organisers (not linked publicly)
+├── css/site.css          Styles
+├── js/content.js         All event content (programme, activities, FAQs, settings)
+├── js/site.js            Site interactions and contact form
+├── js/admin.js           Admin dashboard
+├── assets/               Logos, fonts, photographs, PDFs
+└── tools/build.py        Page generator (header, footer, page text)
+Deployment
+Upload all files to any static web host, keeping the folder structure unchanged.
 
+GitHub Pages: push the files to a repository, then go to Settings → Pages and select the main branch, root folder.
+Netlify or Vercel: drag and drop the folder, or connect the repository. No build command is needed.
+IIMB web server: copy the folder into the web root or a sub-folder.
+Contact form setup
+Enquiries from the Contact and Partner pages are sent to csitm@iimb.ac.in through FormSubmit.
 
-## Contact form → csitm@iimb.ac.in
-The form posts JSON to `https://formsubmit.co/ajax/csitm@iimb.ac.in`, set in `settings.formEndpoint`. Each email includes the enquiry type in the subject, the sender as reply-to, and a table of the fields.
+One-time activation (required after deployment):
 
-**One-time activation:** the first enquiry sent from the live site triggers an activation email from FormSubmit to csitm@iimb.ac.in. Someone with access to that inbox must click **Activate Form**. Submissions are delivered from then on. After activating, FormSubmit can issue a random alias for the address; put it in the endpoint URL so the address isn't exposed in the code.
+Submit one test enquiry from the live website.
+Open the email from FormSubmit in the csitm@iimb.ac.in inbox.
+Click Activate Form.
+Every enquiry after that is delivered automatically. The form doesn't send from a file opened directly from disk or from the Claude preview link.
 
-To use IIMB's own mail system instead, point `formEndpoint` at an internal API that accepts the same JSON POST.
+The endpoint is set in js/content.js:
 
-If delivery fails, visitors see an error with a direct link to email csitm@iimb.ac.in, and their message stays in the form.
+formEndpoint: "https://formsubmit.co/ajax/csitm@iimb.ac.in"
+Updating content
+Event content (programme, activities, speakers, announcements, FAQs, dates and links) lives in js/content.js. Edit the file and redeploy. Fields left empty are hidden on the site.
 
-## Credits
-Five campus photographs are from Wikimedia Commons under CC BY-SA licences, credited in each page footer under "Image credits". Keep those credits if you reuse the photographs. The other photographs and the engravings come from the TECH@IIMB 2027 booklet and concept note.
+Admin dashboard (admin.html). Edit content in the browser, then go to Data & publishing → Copy as content.js, replace js/content.js with it, and redeploy. Changes made in the dashboard alone are visible only in your own browser.
 
-The fonts, Anek Latin and Martel, are under the SIL Open Font License.
+Header, footer and page text are generated by tools/build.py. After editing it, regenerate the pages:
+
+python tools/build.py
+This overwrites the eight public HTML pages. Make your text changes in tools/build.py, not in the HTML files.
+
+Brand name. To show "TECH@IIMB" without the year, set BRAND_YEAR = "" in tools/build.py, then regenerate the pages.
+
+Before going live
+Activate the contact form (see above).
+Protect admin.html behind a server login, or don't upload it.
+Add confirmed dates, registration links and speakers in js/content.js.
+Keep the Image credits in the footer. They're required by the photograph licences.
+Credits
+Campus photographs and engravings: TECH@IIMB 2027 booklet and concept note, CSITM, IIM Bangalore.
+Additional campus photographs: Wikimedia Commons, CC BY-SA. Authors are listed in tools/credits.json and in the site footer.
+Font: Anek Latin, SIL Open Font License.
+© 2026 TECH@IIMB · Centre for Software and IT Management, IIM Bangalore · csitm@iimb.ac.in
